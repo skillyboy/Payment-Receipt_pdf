@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+  Payment system
+{% endblock title %}
+
+
+{% block content %}
+
+
+<div class="hero row bg-info  bg-secondary">
+  <div class=" hero-text col-6 col-sm-6 col-md-12 col-lg-4 m-5" width="10">
+    <div>
+      <div class="card alert alert-success">
+          
+          <div class="card-header alert alert-success">
+            <b> Hello User{{user.username|title}}</b>
+            <br><b> Full-name :  {{user.first_name|title}} {{user.last_name|title}}</b>
+          </div>
+            <H4>Choose Payment method</H4>
+            {% if processors %}
+            {% for item  in processors %}
+            <label>{{item.name|title}} </label>
+            <input type="radio" value="{{item.value}}" name="processor">          
+            <td><a href="{% url 'transaction' item.id %}"><button class="btn btn-primary"> <i class="bi bi-bookmark-check"> </i>Choose </button></a> </td>
+            <br>
+            
+            {% endfor %}
+            {% endif %}
+      </div>
+    </div>
+  </div>
+    <div class=" grid-item col-6 col-sm-6 col-md-6 col-lg-6">    
+    <div class=" grid-item row p-4 bg-info"> 
+      <div class="container text-center text-warning bg-dark p-2">
+        <h3> <strong><i><u> Payment methods avaialable</u> </i></strong></h3> 
+      </div> 
+      <div class="w3-content w3-margin-top" style="max-width:1400px;">
+        <div class="alert alert-success row" role="alert">
+          <hr>
+          {% if processors %}
+            {% for item  in processors %}
+              <div class="card " style="width: 18rem;">
+                <div class="card-header">
+                <b><p class="mb-0">Method : {{item.name}}</p></b> 
+                </div>
+                <ul class="list-group list-group-flush">
+                    <a href="{% url 'print' %}"><li class="list-group-item"><b>print invoices</b> </li></a>
+                    <a href="#"><li class="list-group-item">process a refund</li></a>
+                </ul>
+              </div>
+            {% endfor %}
+          {% endif %} 
+        </div>
+      </div>
+    </div>
+
+    </div> 
+    <!-- BOX1 -->
+    
+    {% if transactions %}
+    {% for item  in transactions %}
+
+      <div class="card m-3" style="width: 18rem;">
+        <div class="card-header">
+        <b><p class="mb-0">transactions id: {{item.id}}</p></b> 
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">confirmation code: {{item.confirmation_code}}</li>
+            <li class="list-group-item">amount: {{item.amount}} </li>
+            <a href="{% url 'print' %}"><li class="list-group-item"><b>View, Print or Download invoice here</b> </li></a>
+            
+            <li class="list-group-item">status:{{item.status|yesno:"Paid,Pending"}}</li>
+        </ul>
+      </div>
+    {% endfor %}
+  {% endif %} 
+  <h3>Total_paid_amount= ${{total}}</h3>
+
+{% endblock content %}
+

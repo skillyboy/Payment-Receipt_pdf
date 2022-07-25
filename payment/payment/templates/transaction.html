@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+  Payment system
+{% endblock title %}
+
+
+{% block content %}
+
+
+
+
+<div class="hero row bg-dark  bg-secondary">
+  <div class=" hero-text col-6 col-sm-6 col-md-12 col-lg-4 m-5" width="10">
+    <div>
+          <div class="card bg-warning">
+              <div class="card-body alert alert-success">
+                <div class="form-group">
+                  <h5 class="card-title">Processor {{item.name}}</h5>
+                </div>
+              </div>
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-3 mt-2 mb-2 w-25"></div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-2 mb-2 w-50 ">
+
+                    {% if products %}
+                    {% for item  in products %}
+                    <div class="card w-100 text-center text-dark">
+                    <form style="width: 400px;" method="POST" action="{% url 'pay' %}">
+                      {%csrf_token%}
+                      <div class="card-body mt3">
+                          <h5 class="card-title"> {{item.name}}</h5>
+                          <p class="card-title"> FEE: {{item.fee}}</p>
+                          <p class="card-title"> This is a product or service to be paid for</p>
+                          <input type="hidden" name="proc" value="{{item.id}}">
+                          <input type="hidden" name="fee" value="{{item.fee}}">
+                          <hr>
+                        </div>
+                      <button type="submit" style="width: 200px;" class="btn btn-primary"> Pay</button>
+                    </form>
+                  </div>
+                  <br>
+                  <br>  
+                    {% endfor %}
+                  {% endif %} 
+                </div> 
+            </div>
+          </div>
+    </div>
+  </div>
+    <div class=" grid-item col-6 col-sm-6 col-md-6 col-lg-6"> 
+        <div class="card-header alert alert-success">
+            <b> Transaction History</b>
+        </div>
+    <div class=" grid-item row p-4 bg-info"> 
+          <div class="w3-content w3-margin-top" style="max-width:1400px;">
+            <div class="alert alert-success row" role="alert">
+              <hr>
+              {% if transactions %}
+                {% for item  in transactions %}
+                  <div class="card m-3" style="width: 18rem;">
+                    <div class="card-header">
+                    <b><p class="mb-0">transactions id: {{item.id}}</p></b> 
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">confirmation code: {{item.confirmation_code}}</li>
+                        <li class="list-group-item">amount: {{item.amount}} </li>
+                        <li class="list-group-item">status:{{item.status|yesno:"Paid,Pending"}}</li>
+
+                        <a href="{% url 'print' %}"><li class="list-group-item">print transaction invoice </li></a>
+                        <a href="#"><li class="list-group-item">process refund </li></a>
+                    </ul>
+                  </div>
+                {% endfor %}
+              {% endif %} 
+            </div>
+          </div>
+    </div>
+    </div> 
+{% endblock content %}
+
